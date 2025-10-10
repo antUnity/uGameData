@@ -28,12 +28,8 @@ namespace IndexedGameData {
         }
         
         public static Rect VerticalFieldPosition(this PropertyDrawer propertyDrawer, Rect origin, int i, int numItems, float offsetY) {
-            //float heightPerProperty = (float)origin.height / numItems;
-            float heightPerProperty = 18f;
-
-            float spacer = 0.05f * heightPerProperty;
-            float propertyHeight = heightPerProperty - (1f - 1f / numItems) * spacer;
-            return new Rect(origin.x, origin.y + i * (propertyHeight + spacer) + offsetY, origin.width, propertyHeight);
+            float propertyHeight = LAYOUT.BASE_ROW_HEIGHT - (1f - 1f / numItems) * LAYOUT.BASE_PADDING;
+            return new Rect(origin.x, origin.y + i * (propertyHeight + LAYOUT.BASE_PADDING) + offsetY, origin.width, propertyHeight);
         }
 
         public static void VerticalPropertyField(this PropertyDrawer propertyDrawer, Rect origin, SerializedProperty property, GUIContent label, int i, int numItems, float labelWidth, float offsetY) {

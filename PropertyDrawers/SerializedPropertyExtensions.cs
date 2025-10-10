@@ -3,7 +3,7 @@
 using UnityEditor;
 
 namespace IndexedGameData {
-    public static class SerializedPropertyExtensions {
+    internal static class SerializedPropertyExtensions {
         public static int GetNumChildren(this SerializedProperty property, bool recursive = false) {
             SerializedProperty iterator = property.Copy();
 

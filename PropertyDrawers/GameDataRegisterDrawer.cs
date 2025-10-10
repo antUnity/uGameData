@@ -1,0 +1,48 @@
+#if UNITY_EDITOR
+
+using UnityEditor;
+using UnityEngine;
+
+namespace IndexedGameData
+{
+    internal static class LAYOUT
+    {
+        public const float BASE_PADDING = 2.0f;
+
+        public const float BASE_COLUMN_INSET = 9f;
+
+        public const float BASE_ROW_HEIGHT = 18f;
+
+    }
+
+    [CustomPropertyDrawer(typeof(GameDataRegister<>))]
+    public class GameDataRegisterDrawer : PropertyDrawer
+    {
+        private const string PROPERTY_INDEXEDREGISTRY_ITEMS = "items";
+
+        SerializedProperty items;
+
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            if (items == null)
+                items = property.FindPropertyRelative(PROPERTY_INDEXEDREGISTRY_ITEMS);
+
+            EditorStyles.textField.alignment = TextAnchor.MiddleLeft;
+
+            label.tooltip = property.tooltip;
+            EditorGUI.BeginProperty(position, label, property);
+            EditorGUI.PropertyField(position, items, label);
+            EditorGUI.EndProperty();
+        }
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            if (items == null)
+                items = property.FindPropertyRelative(PROPERTY_INDEXEDREGISTRY_ITEMS);
+
+            return EditorGUI.GetPropertyHeight(items) + LAYOUT.BASE_PADDING;
+        }
+    }
+}
+
+#endif
