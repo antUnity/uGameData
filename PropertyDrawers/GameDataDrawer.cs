@@ -10,7 +10,6 @@ namespace IndexedGameData
 {
     public enum GameDataLayout { None, Vertical, Horizontal }
 
-    /// Applied to an entry type (all instances use this layout by default).
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = true)]
     public sealed class GameDataDrawerAttribute : Attribute
     {
@@ -256,8 +255,11 @@ namespace IndexedGameData
                 }
 
                 Type type = GetPropertyType(iterator);
-                if (type != null && type.BaseType.IsGenericType && (type.BaseType.GetGenericTypeDefinition() == typeof(GameDataInstance<,>) || type.BaseType.GetGenericTypeDefinition() == typeof(DataValuePair<,>) || type.BaseType.GetGenericTypeDefinition() == typeof(GameDataRegister<>)))
-                    enterChildren = false;
+                if (type != null)
+                {
+                    if (type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(GameDataInstance<,>) || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(DataValuePair<,>) || type.GetGenericTypeDefinition() == typeof(GameDataRegister<>) || type.GetGenericTypeDefinition() == typeof(GameDataValues<,>))))
+                        enterChildren = false;
+                }
 
                 counter += 1;
 
