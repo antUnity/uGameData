@@ -188,6 +188,11 @@ namespace IndexedGameData
 
             for (int i = start; i < dataValuePairs.Count; i++)
             {
+                var data = dataValuePairs[i].Data;
+
+                if (data == null)
+                    continue;
+
                 object index = dataValuePairs[i].Data.Index;
 
                 if (index == null || index.Equals(default))
