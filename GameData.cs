@@ -31,14 +31,14 @@ namespace IndexedGameData
 
     public abstract class GameDataInstance<TIndex, TValue> : GameData<TIndex> where TValue : struct, ICopyable<TValue>
     {
-        protected TValue instance = default;
+        protected TValue template = default;
 
-        public TValue Instance
+        public TValue Template
         {
-            get => instance;
-            set => instance = value;
+            get => template;
+            set => template = value;
         }
 
-        public GameDataInstance(TIndex index, TValue template) : base(index) => instance = template.Copy();
+        public GameDataInstance(TIndex index, TValue template) : base(index) => this.template = template.Copy();
     }
 }

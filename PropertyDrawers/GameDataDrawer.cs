@@ -1,5 +1,3 @@
-#if UNITY_EDITOR
-
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -16,7 +14,12 @@ namespace IndexedGameData
         public GameDataLayout Layout { get; }
         public GameDataDrawerAttribute(GameDataLayout layout) => Layout = layout;
     }
+}
 
+#if UNITY_EDITOR
+
+namespace IndexedGameData
+{
     [CustomPropertyDrawer(typeof(IGameData), true)]
     [CustomPropertyDrawer(typeof(DataValuePair<,>), true)]
     public class GameDataPropertyDrawer : PropertyDrawer
