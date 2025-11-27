@@ -66,11 +66,8 @@ namespace IndexedGameData
 
         public IReadOnlyList<object> Keys => items.ConvertAll(item => item.Index).AsReadOnly();
 
-        public void Add(object index, TGameData data)
+        public void Add(TGameData data)
         {
-            if (Comparer<object>.Default.Compare(index, data.Index) != 0)
-                throw new Exception($"Index mismatch: {index} != {data.Index}");
-
             if (!TryAdd(data))
                 throw new Exception($"Index `{data.Index}` already exists in list `{typeof(TGameData)}`");
         }
