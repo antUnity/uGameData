@@ -210,9 +210,7 @@ namespace IndexedGameData
                 if (!IsPropertyRelevant(iterator, depth, selectedProperty))
                     continue;
 
-                if (property.isExpanded)
-                    iterator.isExpanded = true;
-                else
+                if (!property.isExpanded)
                 {
                     enterChildren = false;
                     continue;
@@ -261,9 +259,13 @@ namespace IndexedGameData
                 Type type = GetPropertyType(iterator);
                 if (type != null)
                 {
-                    if (type.BaseType.IsGenericType && type.BaseType.GetGenericTypeDefinition() == typeof(GameDataInstance<,>) || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(DataValuePair<,>) || type.GetGenericTypeDefinition() == typeof(GameDataRegister<>) || type.GetGenericTypeDefinition() == typeof(GameDataValues<,>))))
+                    if (type.BaseType.IsGenericType && (type.BaseType.GetGenericTypeDefinition() == typeof(GameDataInstance<,>) || type.BaseType.GetGenericTypeDefinition() == typeof(GameData<>))
+                    || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(DataValuePair<,>) || type.GetGenericTypeDefinition() == typeof(GameDataRegister<>) || type.GetGenericTypeDefinition() == typeof(GameDataValues<,>))))
                         enterChildren = false;
                 }
+                
+                if (iteratorLayout != GameDataLayout.None)
+                    iterator.isExpanded = true;
 
                 counter += 1;
 
