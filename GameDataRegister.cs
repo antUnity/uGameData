@@ -27,6 +27,8 @@ namespace IndexedGameData
             return copy;
         }
 
+        public void Validate() => Validate(0);
+
         #endregion ICopyable
 
         [SerializeField] private List<TGameData> items = new();

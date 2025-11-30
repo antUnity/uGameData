@@ -6,6 +6,7 @@ namespace IndexedGameData
     public interface ICopyable<T>
     {
         T Copy();
+        void Validate();
     }
 
     public interface IGameData
