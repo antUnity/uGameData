@@ -6,6 +6,7 @@ using UnityEngine;
 namespace IndexedGameData
 {
     [CustomPropertyDrawer(typeof(GameDataValues<,>))]
+    [CustomPropertyDrawer(typeof(EnumDataValues<,>))]
     public class GameDataValuesDrawer : PropertyDrawer
     {
         private const string PROPERTY_INDEXEDREGISTRY_AVPS = "dataValuePairs";
