@@ -20,7 +20,7 @@ namespace uGameDataCORE
 
 namespace uGameDataCORE
 {
-    [CustomPropertyDrawer(typeof(IGameData), true)]
+    [CustomPropertyDrawer(typeof(IGameDataBase), true)]
     [CustomPropertyDrawer(typeof(DataValuePair<,>), true)]
     public class GameDataPropertyDrawer : PropertyDrawer
     {
@@ -368,9 +368,9 @@ namespace uGameDataCORE
 
                 if (iterator.propertyType == SerializedPropertyType.ObjectReference)
                 {
-                    if (iterator.objectReferenceValue && iterator.objectReferenceValue is IGameData gameData)
+                    if (iterator.objectReferenceValue && iterator.objectReferenceValue is IGameDataBase gameData)
                     {
-                        headerString = $"Index [{gameData.Index}]...";
+                        headerString = $"Index [{gameData.GetIndex()}]...";
                     }
                 }
                 else
@@ -394,8 +394,8 @@ namespace uGameDataCORE
 
                     if (iterator.propertyType == SerializedPropertyType.ObjectReference)
                     {
-                        if (iterator.objectReferenceValue && iterator.objectReferenceValue is IGameData gameData)
-                            headerString = $"Index [{gameData.Index}]";
+                        if (iterator.objectReferenceValue && iterator.objectReferenceValue is IGameDataBase gameData)
+                            headerString = $"Index [{gameData.GetIndex()}]";
                     }
 
                     headers.Add(headerString);
@@ -414,8 +414,8 @@ namespace uGameDataCORE
 
             if (iterator.propertyType == SerializedPropertyType.ObjectReference)
             {
-                if (iterator.objectReferenceValue && iterator.objectReferenceValue is IGameData gameData)
-                    header = $"Index [{gameData.Index}]...";
+                if (iterator.objectReferenceValue && iterator.objectReferenceValue is IGameDataBase gameData)
+                    header = $"Index [{gameData.GetIndex()}]...";
             }
             else
             {

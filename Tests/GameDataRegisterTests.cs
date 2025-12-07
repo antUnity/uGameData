@@ -4,10 +4,12 @@ using uGameDataCORE;
 namespace SharedTests {
     internal class GameDataRegisterTests {
         // Definitions
-        internal class TestableGameDataClass<TIndex> : IGameData {
-            public object Index {
+        internal class TestableGameDataClass<TIndex> : IGameDataBase {
+            public TIndex Index {
                 get; set;
             }
+
+            public object GetIndex() => Index;
 
             public TestableGameDataClass(TIndex index) => Index = index;
         }
@@ -25,21 +27,21 @@ namespace SharedTests {
             GameDataRegistry<TestableGameDataClass<string>> indexedList = new();
 
             // Contains
-            Assert.IsFalse(indexedList.ContainsKey(null), "List contains a null value");
+            Assert.IsFalse(indexedList.ContainsIndex(null), "List contains a null value");
 
             // IndexedClass
             string index = "TEST";
             TestableGameDataClass<string> indexedClass = new(index);
 
             // Add
-            indexedList[(string)indexedClass.Index] = indexedClass;
-            Assert.IsTrue(indexedList.ContainsKey(index), "Failed to add indexed object");
+            indexedList[indexedClass.Index] = indexedClass;
+            Assert.IsTrue(indexedList.ContainsIndex(index), "Failed to add indexed object");
             Assert.IsTrue(indexedList.Count == 1, "Failed to add indexed object");
 
             // Add 2nd
             string index2 = "TEST2";
             TestableGameDataClass<string> indexedClass2 = new(index2);
-            indexedList[(string)indexedClass2.Index] = indexedClass2;
+            indexedList[indexedClass2.Index] = indexedClass2;
             Assert.IsTrue(indexedList.Count == 2, "Failed to add second indexed object");
             Assert.IsTrue(indexedList.Data.Count == 2, "Failed to verify item list size");
 
@@ -51,8 +53,8 @@ namespace SharedTests {
             Assert.IsTrue(indexedList.Count == 0, "Failed to remove item from list");
 
             // Clear
-            indexedList[(string)indexedClass.Index] = indexedClass;
-            indexedList[(string)indexedClass2.Index] = indexedClass2;
+            indexedList[indexedClass.Index] = indexedClass;
+            indexedList[indexedClass2.Index] = indexedClass2;
             indexedList.Clear();
             Assert.IsTrue(indexedList.Count == 0, "Failed to clear list");
         }
@@ -62,7 +64,7 @@ namespace SharedTests {
             GameDataRegistry<TestableGameDataClass<string>> indexedList = new();
 
             // Contains
-            Assert.IsFalse(indexedList.ContainsKey(null), "List contains a null value");
+            Assert.IsFalse(indexedList.ContainsIndex(null), "List contains a null value");
 
             // IndexedClass
             string index = "TEST";
@@ -71,8 +73,8 @@ namespace SharedTests {
             TestableGameDataClass<string> indexedClass2 = new(index2);
 
             // Add
-            indexedList[(string)indexedClass.Index] = indexedClass;
-            indexedList[(string)indexedClass2.Index] = indexedClass2;
+            indexedList[indexedClass.Index] = indexedClass;
+            indexedList[indexedClass2.Index] = indexedClass2;
 
             // Access
             Assert.IsTrue(indexedList[index] == indexedClass && indexedList[index2] == indexedClass2, "Failed to access added values by index");

@@ -30,7 +30,6 @@ namespace SharedTests
         {
             TestableGameDataAsset asset = ScriptableObject.CreateInstance<TestableGameDataAsset>();
             Assert.IsNotNull(asset, "Failed to instantiate object");
-            Assert.IsTrue(asset == 0, "IndexedAsset has incorrect value");
         }
     }
 }

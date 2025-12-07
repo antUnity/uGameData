@@ -7,7 +7,7 @@ using UnityEngine;
 namespace uGameDataCORE
 {
     [Serializable]
-    public class GameDataRegistry<TGameData> : IEnumerable<TGameData>, ICopyable<GameDataRegistry<TGameData>> where TGameData : class, IGameData
+    public class GameDataRegistry<TGameData> : IEnumerable<TGameData>, ICopyable<GameDataRegistry<TGameData>> where TGameData : class, IGameDataBase
     {
         #region IEnumerable
 
@@ -39,10 +39,10 @@ namespace uGameDataCORE
         {
             get
             {
-                if (index is IGameData data)
-                    throw new Exception($"`{nameof(IGameData)}` cannot be used as an index. Use '{nameof(IGameData.Index)}' a lookup in the registry of type `{typeof(TGameData)}`");
+                if (index is IGameDataBase data)
+                    throw new Exception($"`{nameof(IGameDataBase)}` cannot be used as an index. Use '{nameof(IGameDataBase.GetIndex)}' a lookup in the registry of type `{typeof(TGameData)}`");
 
-                if (!ContainsKey(index))
+                if (!ContainsIndex(index))
                     throw new Exception($"Index `{index}` not found in list `{typeof(TGameData)}`");
 
                 if (itemsIndex[index] >= items.Count)
@@ -52,11 +52,11 @@ namespace uGameDataCORE
             }
             set
             {
-                if (index is IGameData)
-                    throw new Exception($"`{nameof(IGameData)}` cannot be used as an index. Use '{nameof(IGameData.Index)}' a lookup in the registry of type `{typeof(TGameData)}`");
+                if (index is IGameDataBase)
+                    throw new Exception($"`{nameof(IGameDataBase)}` cannot be used as an index. Use '{nameof(IGameDataBase.GetIndex)}' a lookup in the registry of type `{typeof(TGameData)}`");
 
-                if (Comparer<object>.Default.Compare(index, value.Index) != 0)
-                    throw new Exception($"Index mismatch: {index} != {value.Index}");
+                if (Comparer<object>.Default.Compare(index, value.GetIndex()) != 0)
+                    throw new Exception($"Index mismatch: {index} != {value.GetIndex()}");
 
                 AddOrUpdate(value);
             }
@@ -66,12 +66,12 @@ namespace uGameDataCORE
 
         public IReadOnlyList<TGameData> Data => items.ToList().AsReadOnly();
 
-        public IReadOnlyList<object> Keys => items.ConvertAll(item => item.Index).AsReadOnly();
+        public IReadOnlyList<object> Keys => items.ConvertAll(item => item.GetIndex()).AsReadOnly();
 
         public void Add(TGameData data)
         {
             if (!TryAdd(data))
-                throw new Exception($"Index `{data.Index}` already exists in list `{typeof(TGameData)}`");
+                throw new Exception($"Index `{data.GetIndex()}` already exists in list `{typeof(TGameData)}`");
         }
 
         public void Clear()
@@ -80,25 +80,25 @@ namespace uGameDataCORE
             items.Clear();
         }
 
-        public bool ContainsData(TGameData data) => data != null && ContainsKey(data.Index);
+        public bool ContainsData(TGameData data) => data != null && ContainsIndex(data.GetIndex());
 
-        public bool ContainsKey(object index)
+        public bool ContainsIndex(object index)
         {
             if (index == null)
                 return false;
 
-            if (index is IGameData)
-                throw new Exception($"`{nameof(IGameData)}` cannot be used as an index. Use '{nameof(IGameData.Index)}' a lookup in the registry of type `{typeof(TGameData)}`");
+            if (index is IGameDataBase)
+                throw new Exception($"`{nameof(IGameDataBase)}` cannot be used as an index. Use '{nameof(IGameDataBase.GetIndex)}' a lookup in the registry of type `{typeof(TGameData)}`");
 
             return itemsIndex.ContainsKey(index);
         }
 
         public bool TryGetData(object index, out TGameData data)
         {
-            if (index is IGameData)
-                throw new Exception($"`{nameof(IGameData)}` cannot be used as an index. Use '{nameof(IGameData.Index)}' a lookup in the registry of type `{typeof(TGameData)}`");
+            if (index is IGameDataBase)
+                throw new Exception($"`{nameof(IGameDataBase)}` cannot be used as an index. Use '{nameof(IGameDataBase.GetIndex)}' a lookup in the registry of type `{typeof(TGameData)}`");
 
-            if (ContainsKey(index))
+            if (ContainsIndex(index))
             {
                 data = GetData(index);
                 return true;
@@ -110,10 +110,10 @@ namespace uGameDataCORE
 
         public void Remove(object index)
         {
-            if (index is IGameData)
-                throw new Exception($"`{nameof(IGameData)}` cannot be used as an index. Use '{nameof(IGameData.Index)}' a lookup in the registry of type `{typeof(TGameData)}`");
+            if (index is IGameDataBase)
+                throw new Exception($"`{nameof(IGameDataBase)}` cannot be used as an index. Use '{nameof(IGameDataBase.GetIndex)}' a lookup in the registry of type `{typeof(TGameData)}`");
 
-            if (!ContainsKey(index))
+            if (!ContainsIndex(index))
             {
                 Debug.LogWarning($"Index `{index}` not found in list `{typeof(TGameData)}`");
                 return;
@@ -139,7 +139,7 @@ namespace uGameDataCORE
 
             for (int i = start; i < items.Count; i++)
             {
-                object index = items[i].Index;
+                object index = items[i].GetIndex();
 
                 if (index == null || index.Equals(default))
                     continue;
@@ -160,12 +160,12 @@ namespace uGameDataCORE
         private void AddOrUpdate(TGameData data)
         {
             if (!TryAdd(data))
-                items[itemsIndex[data.Index]] = data;
+                items[itemsIndex[data.GetIndex()]] = data;
         }
 
         private TGameData GetData(object index)
         {
-            if (!ContainsKey(index))
+            if (!ContainsIndex(index))
                 throw new Exception($"Index `{index}` not found in list `{typeof(TGameData)}`");
 
             if (itemsIndex[index] >= items.Count)
@@ -176,7 +176,7 @@ namespace uGameDataCORE
 
         private bool TryAdd(TGameData data)
         {
-            object index = data.Index;
+            object index = data.GetIndex();
 
             if (itemsIndex.ContainsKey(index))
                 return false;

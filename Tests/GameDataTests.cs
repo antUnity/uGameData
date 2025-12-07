@@ -19,7 +19,6 @@ namespace SharedTests {
 
             entry.Index = "123";
             Assert.IsTrue((string)entry.Index == "123", "IndexedEntry index was not modified");
-            Assert.IsTrue(entry == "123", "IndexedEntry has incorrect string value");
         }
     }
 }

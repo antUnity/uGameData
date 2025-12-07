@@ -40,7 +40,7 @@ namespace uGameDataCORE
 
         public static void RegisterTemplate(TIndex index, TValue template)
         {
-            if (assets.ContainsKey(index))
+            if (assets.ContainsIndex(index))
             {
                 assets[index].Template = template;
                 return;

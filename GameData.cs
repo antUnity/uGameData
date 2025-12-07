@@ -4,31 +4,37 @@ using UnityEngine;
 
 namespace uGameDataCORE
 {
-    public interface ICopyable<T>
+    public interface IGameDataBase
     {
-        T Copy();
-        void Validate();
+        object GetIndex();
     }
 
-    public interface IGameData
+    public interface IGameData<TIndex> : IGameDataBase
     {
-        object Index { get; }
+        TIndex Index { get; }
+
+        object IGameDataBase.GetIndex() => Index;
     }
 
     [Serializable]
-    public abstract class GameData<TIndex> : IGameData
+    public abstract class GameData<TIndex> : IGameData<TIndex>
     {
-        public static implicit operator TIndex(GameData<TIndex> obj) => obj.index;
-
         [SerializeField] private TIndex index = default;
 
-        public object Index
+        public TIndex Index
         {
             get => index;
-            set => index = (TIndex)value;
+            set => index = value;
         }
 
         public GameData(TIndex index) => this.index = index;
+    }
+
+    public interface ICopyable<T>
+    {
+        T Copy();
+
+        void Validate();
     }
 
     public abstract class GameDataInstance<TIndex, TValue> : GameData<TIndex> where TValue : struct, ICopyable<TValue>

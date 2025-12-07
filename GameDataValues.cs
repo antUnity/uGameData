@@ -8,7 +8,7 @@ namespace uGameDataCORE
 {
     [Serializable]
     [GameDataDrawer(GameDataLayout.Vertical)]
-    public struct DataValuePair<TGameData, TValue> where TGameData : IGameData
+    public struct DataValuePair<TGameData, TValue> where TGameData : IGameDataBase
     {
         [Tooltip("An indexed data entry associated with a value.")]
         [SerializeField] private TGameData data;
@@ -36,7 +36,7 @@ namespace uGameDataCORE
     }
 
     [Serializable]
-    public class GameDataValues<TGameData, TValue> : IEnumerable<DataValuePair<TGameData, TValue>>, ICopyable<GameDataValues<TGameData, TValue>> where TGameData : IGameData
+    public class GameDataValues<TGameData, TValue> : IEnumerable<DataValuePair<TGameData, TValue>>, ICopyable<GameDataValues<TGameData, TValue>> where TGameData : IGameDataBase
     {
         #region IEnumerable
 
@@ -68,7 +68,7 @@ namespace uGameDataCORE
         {
             get
             {
-                if (!ContainsKey(index))
+                if (!ContainsIndex(index))
                     throw new Exception($"Index `{index}` not found in list `{typeof(TGameData)}`");
 
                 if (itemsIndex[index] >= dataValuePairs.Count)
@@ -78,7 +78,7 @@ namespace uGameDataCORE
             }
             set
             {
-                if (!ContainsKey(index))
+                if (!ContainsIndex(index))
                     throw new Exception($"Index `{index}` not found in list `{typeof(TGameData)}`");
 
                 var data = GetData(index);
@@ -88,7 +88,7 @@ namespace uGameDataCORE
 
         public TValue this[TGameData asset]
         {
-            get => this[asset.Index];
+            get => this[asset.GetIndex()];
             set => AddOrUpdate(asset, value);
         }
 
@@ -96,7 +96,7 @@ namespace uGameDataCORE
 
         public IReadOnlyList<TGameData> Data => dataValuePairs.ConvertAll(item => item.Data).AsReadOnly();
 
-        public IReadOnlyList<object> Keys => dataValuePairs.ConvertAll(item => item.Data.Index).AsReadOnly();
+        public IReadOnlyList<object> Keys => dataValuePairs.ConvertAll(item => item.Data.GetIndex()).AsReadOnly();
 
         public IReadOnlyList<TValue> Values => dataValuePairs.ConvertAll(item => item.Value).AsReadOnly();
 
@@ -104,7 +104,7 @@ namespace uGameDataCORE
         {
             var pair = new DataValuePair<TGameData, TValue>(item, value);
             if (!TryAdd(pair))
-                throw new Exception($"Index `{item.Index}` already exists in list `{typeof(TGameData)}`");
+                throw new Exception($"Index `{item.GetIndex()}` already exists in list `{typeof(TGameData)}`");
         }
 
         public void Clear()
@@ -113,9 +113,9 @@ namespace uGameDataCORE
             itemsIndex.Clear();
         }
 
-        public bool ContainsData(TGameData data) => data != null && ContainsKey(data.Index);
+        public bool ContainsData(TGameData data) => data != null && ContainsIndex(data.GetIndex());
 
-        public bool ContainsKey(object index)
+        public bool ContainsIndex(object index)
         {
             if (index == null)
                 return false;
@@ -128,7 +128,7 @@ namespace uGameDataCORE
 
         public bool TryGetData(object index, out TGameData data)
         {
-            if (ContainsKey(index))
+            if (ContainsIndex(index))
             {
                 data = GetData(index);
                 return true;
@@ -140,7 +140,7 @@ namespace uGameDataCORE
 
         public bool TryGetValue(object index, out TValue value)
         {
-            if (ContainsKey(index))
+            if (ContainsIndex(index))
             {
                 value = this[index];
                 return true;
@@ -153,7 +153,7 @@ namespace uGameDataCORE
         public bool TryGetValue(TGameData item, out TValue value)
         {
             if (item != null)
-                return TryGetValue(item.Index, out value);
+                return TryGetValue(item.GetIndex(), out value);
 
             value = default;
             return false;
@@ -161,7 +161,7 @@ namespace uGameDataCORE
 
         public void Remove(object index)
         {
-            if (!ContainsKey(index))
+            if (!ContainsIndex(index))
                 return;
 
             int i = itemsIndex[index];
@@ -174,7 +174,7 @@ namespace uGameDataCORE
         public void Remove(TGameData item)
         {
             if (item != null)
-                Remove(item.Index);
+                Remove(item.GetIndex());
         }
 
         public virtual void Validate(int start = 0)
@@ -195,7 +195,7 @@ namespace uGameDataCORE
                 if (data == null)
                     continue;
 
-                object index = dataValuePairs[i].Data.Index;
+                object index = dataValuePairs[i].Data.GetIndex();
 
                 if (index == null || index.Equals(default))
                     continue;
@@ -217,12 +217,12 @@ namespace uGameDataCORE
         {
             var pair = new DataValuePair<TGameData, TValue>(data, value);
             if (!TryAdd(pair))
-                dataValuePairs[itemsIndex[data.Index]] = pair;
+                dataValuePairs[itemsIndex[data.GetIndex()]] = pair;
         }
 
         private TGameData GetData(object index)
         {
-            if (!ContainsKey(index))
+            if (!ContainsIndex(index))
                 throw new Exception($"Index `{index}` not found in list `{typeof(TGameData)}`");
 
             if (itemsIndex[index] >= dataValuePairs.Count)
@@ -233,7 +233,7 @@ namespace uGameDataCORE
 
         private bool TryAdd(DataValuePair<TGameData, TValue> pair)
         {
-            object index = pair.Data.Index;
+            object index = pair.Data.GetIndex();
 
             if (itemsIndex.ContainsKey(index))
                 return false;
