@@ -31,7 +31,7 @@ namespace uGameDataCORE
         public GameData(TIndex index) => this.index = index;
     }
 
-    public abstract class GameDataInstance<TIndex, TValue> : GameData<TIndex> where TIndex : struct where TValue : struct, ICopyable<TValue>
+    public abstract class GameDataInstance<TIndex, TValue> : GameData<TIndex> where TValue : struct, ICopyable<TValue>
     {
         private readonly GameDataDefinition<TIndex, TValue> definition = default;
 

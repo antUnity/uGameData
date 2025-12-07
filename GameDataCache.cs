@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace uGameDataCORE
 {
-    internal class GameDataDefinition<TIndex, TValue> : GameData<TIndex> where TIndex : struct where TValue : struct, ICopyable<TValue>
+    internal class GameDataDefinition<TIndex, TValue> : GameData<TIndex> where TValue : struct, ICopyable<TValue>
     {
         protected TValue template = default;
 
@@ -18,7 +16,7 @@ namespace uGameDataCORE
         public GameDataDefinition(TIndex index, TValue template) : base(index) => this.template = template.Copy();
     }
 
-    public static class GameDataCache<TIndex, TValue> where TIndex : struct where TValue : struct, ICopyable<TValue>
+    public static class GameDataCache<TIndex, TValue> where TValue : struct, ICopyable<TValue>
     {
         private static GameDataRegistry<GameDataDefinition<TIndex, TValue>> assets = new();
 
@@ -72,7 +70,7 @@ namespace uGameDataCORE
     }
 
     // Helper class to implement the interface and call the static cache
-    internal sealed class GameDataCacheWrapper<TIndex, TValue> : IGameDataCache where TIndex : struct where TValue : struct, ICopyable<TValue>
+    internal sealed class GameDataCacheWrapper<TIndex, TValue> : IGameDataCache where TValue : struct, ICopyable<TValue>
     {
         // The implementation simply calls the static methods
         public void Clear() => GameDataCache<TIndex, TValue>.Clear();
@@ -87,7 +85,7 @@ namespace uGameDataCORE
         /// Registers a specific type combination (TIndex/TValue) with the manager.
         /// This should be called once per unique cache during initialization.
         /// </summary>
-        internal static void RegisterCache<TIndex, TValue>() where TIndex : struct where TValue : struct, ICopyable<TValue>
+        internal static void RegisterCache<TIndex, TValue>() where TValue : struct, ICopyable<TValue>
         {
             // Get the specific closed generic type of the manager helper
             (Type index, Type value) = (typeof(TIndex), typeof(TValue));
