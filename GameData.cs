@@ -43,16 +43,11 @@ namespace uGameDataCORE
 
         public TValue Template => definition?.Template ?? throw new NullReferenceException(nameof(definition));
 
-        public GameDataInstance(TIndex index, TValue template) : base(index) 
+        public GameDataInstance(TIndex index, TValue? template = null) : base(index) 
         {
-            GameDataCache<TIndex, TValue>.RegisterTemplate(index, template);
+            if (template.HasValue)
+                GameDataCache<TIndex, TValue>.RegisterTemplate(index, template.Value);
 
-            if (!GameDataCache<TIndex, TValue>.TryGetDefinition(index, out definition))
-                throw new KeyNotFoundException(nameof(index));
-        }
-
-        public GameDataInstance(TIndex index) : base(index)
-        {
             if (!GameDataCache<TIndex, TValue>.TryGetDefinition(index, out definition))
                 throw new KeyNotFoundException(nameof(index));
         }
