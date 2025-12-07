@@ -5,7 +5,7 @@ namespace IndexedGameData
 {
     public static class GameDataCache<TIndex, TValue> where TIndex : struct where TValue : struct, ICopyable<TValue>
     {
-        private static GameDataRegister<GameDataDefinition<TIndex, TValue>> assets = new();
+        private static GameDataRegistry<GameDataDefinition<TIndex, TValue>> assets = new();
 
         public static void Clear() => assets.Clear();
 

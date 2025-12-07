@@ -260,7 +260,7 @@ namespace IndexedGameData
                 if (type != null)
                 {
                     if (type.BaseType.IsGenericType && (type.BaseType.GetGenericTypeDefinition() == typeof(GameDataInstance<,>) || type.BaseType.GetGenericTypeDefinition() == typeof(GameData<>))
-                    || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(DataValuePair<,>) || type.GetGenericTypeDefinition() == typeof(GameDataRegister<>) || type.GetGenericTypeDefinition() == typeof(GameDataValues<,>))))
+                    || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(DataValuePair<,>) || type.GetGenericTypeDefinition() == typeof(GameDataRegistry<>) || type.GetGenericTypeDefinition() == typeof(GameDataValues<,>))))
                         enterChildren = false;
                 }
                 

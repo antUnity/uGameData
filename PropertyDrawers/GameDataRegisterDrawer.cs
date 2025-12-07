@@ -15,7 +15,7 @@ namespace IndexedGameData
 
     }
 
-    [CustomPropertyDrawer(typeof(GameDataRegister<>))]
+    [CustomPropertyDrawer(typeof(GameDataRegistry<>))]
     public class GameDataRegisterDrawer : PropertyDrawer
     {
         private const string PROPERTY_INDEXEDREGISTRY_ITEMS = "items";

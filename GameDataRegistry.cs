@@ -7,7 +7,7 @@ using UnityEngine;
 namespace IndexedGameData
 {
     [Serializable]
-    public class GameDataRegister<TGameData> : IEnumerable<TGameData>, ICopyable<GameDataRegister<TGameData>> where TGameData : class, IGameData
+    public class GameDataRegistry<TGameData> : IEnumerable<TGameData>, ICopyable<GameDataRegistry<TGameData>> where TGameData : class, IGameData
     {
         #region IEnumerable
 
@@ -19,9 +19,9 @@ namespace IndexedGameData
 
         #region ICopyable
 
-        public GameDataRegister<TGameData> Copy()
+        public GameDataRegistry<TGameData> Copy()
         {
-            var copy = new GameDataRegister<TGameData>();
+            var copy = new GameDataRegistry<TGameData>();
             copy.items = new List<TGameData>(items);
             copy.Validate();
             return copy;
@@ -152,7 +152,7 @@ namespace IndexedGameData
                 else
                 {
                     items[i] = null;
-                    Debug.LogWarning($"Discarded item with duplicate index [{index}] at position {i} in {nameof(GameDataRegister<TGameData>)}");
+                    Debug.LogWarning($"Discarded item with duplicate index [{index}] at position {i} in {nameof(GameDataRegistry<TGameData>)}");
                 }
             }
         }
