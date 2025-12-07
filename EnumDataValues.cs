@@ -24,5 +24,7 @@ namespace uGameDataCORE
         }
 
         #endregion ICopyable
+
+        public void Add(TEnum index, TValue value) => base.Add(new EnumData<TEnum>(index), value);
     }
 }
