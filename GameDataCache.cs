@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
 namespace uGameDataCORE
 {
     internal class GameDataDefinition<TIndex, TValue> : GameData<TIndex> where TIndex : struct where TValue : struct, ICopyable<TValue>
@@ -16,6 +21,8 @@ namespace uGameDataCORE
     public static class GameDataCache<TIndex, TValue> where TIndex : struct where TValue : struct, ICopyable<TValue>
     {
         private static GameDataRegistry<GameDataDefinition<TIndex, TValue>> assets = new();
+
+        static GameDataCache() => GameDataCacheManager.RegisterCache<TIndex, TValue>();
 
         internal static bool TryGetDefinition(TIndex index, out GameDataDefinition<TIndex, TValue> definition)
         {
@@ -56,6 +63,53 @@ namespace uGameDataCORE
 
             template = default;
             return false;
+        }
+    }
+
+    internal interface IGameDataCache
+    {
+        void Clear();
+    }
+
+    // Helper class to implement the interface and call the static cache
+    internal sealed class GameDataCacheWrapper<TIndex, TValue> : IGameDataCache where TIndex : struct where TValue : struct, ICopyable<TValue>
+    {
+        // The implementation simply calls the static methods
+        public void Clear() => GameDataCache<TIndex, TValue>.Clear();
+    }
+
+    public static class GameDataCacheManager
+    {
+        // Dictionary to hold ALL registered manager instances (one per TIndex/TValue combo)
+        private static readonly Dictionary<(Type index, Type value), IGameDataCache> caches = new();
+
+        /// <summary>
+        /// Registers a specific type combination (TIndex/TValue) with the manager.
+        /// This should be called once per unique cache during initialization.
+        /// </summary>
+        internal static void RegisterCache<TIndex, TValue>() where TIndex : struct where TValue : struct, ICopyable<TValue>
+        {
+            // Get the specific closed generic type of the manager helper
+            (Type index, Type value) = (typeof(TIndex), typeof(TValue));
+
+            if (caches.ContainsKey((index, value)))
+                return;
+
+            // Create the instance of the helper class
+            var instance = new GameDataCacheWrapper<TIndex, TValue>();
+            
+            // Store the instance and its unique Type
+            caches.Add((index, value), instance);
+        }
+
+        public static IReadOnlyCollection<(Type index, Type value)> RegisteredCacheTypes => caches.Keys;
+
+        public static void ClearAll()
+        {
+            foreach (var cache in caches.Values)
+                cache.Clear();
+
+            caches.Clear();
         }
     }
 }
