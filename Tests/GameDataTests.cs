@@ -5,9 +5,9 @@ using uGameData;
 namespace SharedTests {
     internal class GameDataTests {
         // Definitions
-        internal class TestableGameData : GameData<string>
+        internal class TestableGameData : GameData<uint>
         {
-            public TestableGameData() : base(string.Empty) { }
+            public TestableGameData() : base(default) { }
         }
 
         // Methods
@@ -17,8 +17,8 @@ namespace SharedTests {
             TestableGameData entry = new();
             Assert.IsNotNull(entry, "Failed to instantiate object");
 
-            entry.Index = "123";
-            Assert.IsTrue((string)entry.Index == "123", "IndexedEntry index was not modified");
+            entry.Index = 123;
+            Assert.IsTrue(entry.Index == 123, "IndexedEntry index was not modified");
         }
     }
 }

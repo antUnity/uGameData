@@ -17,7 +17,7 @@ namespace uGameData
     }
 
     [Serializable]
-    public abstract class GameData<TIndex> : IGameData<TIndex>
+    public abstract class GameData<TIndex> : IGameData<TIndex> where TIndex : struct
     {
         [SerializeField] private TIndex index = default;
 
@@ -37,7 +37,7 @@ namespace uGameData
         void Validate();
     }
 
-    public abstract class GameDataInstance<TIndex, TValue> : GameData<TIndex> where TValue : struct, ICopyable<TValue>
+    public abstract class GameDataInstance<TIndex, TValue> : GameData<TIndex> where TIndex : struct where TValue : struct, ICopyable<TValue>
     {
         private readonly GameDataDefinition<TIndex, TValue> definition = default;
 
