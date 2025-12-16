@@ -259,7 +259,7 @@ namespace uGameData
                 Type type = GetPropertyType(iterator);
                 if (type != null)
                 {
-                    if (type.BaseType.IsGenericType && (type.BaseType.GetGenericTypeDefinition() == typeof(GameDataInstance<,>) || type.BaseType.GetGenericTypeDefinition() == typeof(GameData<>))
+                    if (type.BaseType.IsGenericType && (type.BaseType.GetGenericTypeDefinition() == typeof(GameData<,>) || type.BaseType.GetGenericTypeDefinition() == typeof(GameData<>))
                     || (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(DataValuePair<,>) || type.GetGenericTypeDefinition() == typeof(GameDataRegistry<>) || type.GetGenericTypeDefinition() == typeof(GameDataValues<,>))))
                         enterChildren = false;
                 }

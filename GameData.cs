@@ -37,13 +37,13 @@ namespace uGameData
         void Validate();
     }
 
-    public abstract class GameDataInstance<TIndex, TValue> : GameData<TIndex> where TIndex : struct where TValue : struct, ICopyable<TValue>
+    public abstract class GameData<TIndex, TValue> : GameData<TIndex> where TIndex : struct where TValue : struct, ICopyable<TValue>
     {
         private readonly GameDataDefinition<TIndex, TValue> definition = default;
 
         public TValue Template => definition?.Template ?? throw new NullReferenceException(nameof(definition));
 
-        public GameDataInstance(TIndex index, TValue? template = null) : base(index) 
+        public GameData(TIndex index, TValue? template = null) : base(index) 
         {
             if (GameDataCacheManager.Enabled)
             {
