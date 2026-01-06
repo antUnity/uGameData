@@ -1,6 +1,6 @@
 {
-    "name": "uGameData",
-    "rootNamespace": "uGameData",
+    "name": "antunity.GameData",
+    "rootNamespace": "antunity.GameData",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

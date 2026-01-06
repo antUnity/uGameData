@@ -3,7 +3,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace uGameData
+namespace antunity.GameData
 {
     internal static class LAYOUT
     {
@@ -15,8 +15,11 @@ namespace uGameData
 
     }
 
+    /// <summary>
+    /// A custom property drawer for GameDataRegistry<>.
+    /// </summary>
     [CustomPropertyDrawer(typeof(GameDataRegistry<>))]
-    public class GameDataRegisterDrawer : PropertyDrawer
+    public class GameDataRegistryDrawer : PropertyDrawer
     {
         private const string PROPERTY_INDEXEDREGISTRY_ITEMS = "items";
 

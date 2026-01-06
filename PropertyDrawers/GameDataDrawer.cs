@@ -4,24 +4,33 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
-namespace uGameData
+namespace antunity.GameData
 {
+    /// <summary>Specifies a preference for vertical or horizontal display.</summary>
     public enum GameDataLayout { None, Vertical, Horizontal }
 
+    /// <summary>Attribute to specify a layout for the property drawer.</summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = true)]
     public sealed class GameDataDrawerAttribute : Attribute
     {
+        /// <summary>The specified layout.</summary>
         public GameDataLayout Layout { get; }
+
         public GameDataDrawerAttribute(GameDataLayout layout) => Layout = layout;
     }
+
+    /// <summary>Tag interface for types that should be rendered by the custom drawer.</summary>
+    public interface IUseGameDataDrawer { };
 }
 
 #if UNITY_EDITOR
 
-namespace uGameData
+namespace antunity.GameData
 {
-    [CustomPropertyDrawer(typeof(IGameDataBase), true)]
-    [CustomPropertyDrawer(typeof(DataValuePair<,>), true)]
+    /// <summary>
+    /// A custom property drawer for game data types typically contained in registries and lists.
+    /// </summary>
+    [CustomPropertyDrawer(typeof(IUseGameDataDrawer), true)]
     public class GameDataPropertyDrawer : PropertyDrawer
     {
         private bool DEBUG_LOG = false;
@@ -29,6 +38,8 @@ namespace uGameData
         private bool DEBUG_LOG_HEIGHT = false;
 
         private string selectedProperty = string.Empty;
+
+        private bool? isInitialized = null;
 
         Dictionary<Type, GameDataLayout> layoutCache = new();
 
@@ -40,6 +51,13 @@ namespace uGameData
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
+            // Expand on first initialize
+            if (isInitialized == null)
+            {
+                property.isExpanded = true;
+                isInitialized = true;
+            }
+
             if (Event.current.type == EventType.Layout)
                 return;
 
@@ -167,6 +185,8 @@ namespace uGameData
                     // Render property field
                     if (property.isExpanded && !changed)
                         this.HorizontalPropertyField(itemPosition, iterator, GUIContent.none, counter, numChildren);
+
+                    enterChildren = false;
                 }
 
                 counter += 1;

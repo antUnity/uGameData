@@ -3,8 +3,11 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace uGameData
+namespace antunity.GameData
 {
+    /// <summary>
+    /// A custom property drawer for GameDataValues<,>.
+    /// </summary>
     [CustomPropertyDrawer(typeof(GameDataValues<,>))]
     [CustomPropertyDrawer(typeof(EnumDataValues<,>))]
     public class GameDataValuesDrawer : PropertyDrawer
